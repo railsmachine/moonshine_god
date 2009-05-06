@@ -1,0 +1,30 @@
+= Moonshine_God
+
+=== A plugin for Moonshine[http://github.com/railsmachine/moonshine]
+
+Moonshine_God provides simple installation and configuration management
+for god[http://god.rubyforge.com]. Just drop your god configs into
+config/god in your Rails application, add a couple lines to your
+Moonshine manifest, and deploy.
+
+=== Instructions
+
+* <tt>script/plugin install git://github.com/ACCOUNT/moonshine_god.git</tt>
+* Add god configuration files at config/god/*.god
+* Include the plugin and recipe(s) you want to use in your Moonshine manifest.
+    plugin :god
+    recipe :god
+* Deploy your application
+
+=== Updating your god configuration
+After you update configurations and re-deploy, tell god to reload 
+the config files. You can add this to your deploy.rb for reloads
+after each deployment:
+  namespace :god do
+    desc "Reload god configuration"
+    task :reload do
+      sudo 'god load /etc/god/god.conf'
+    end
+  end
+  after :deploy, 'god:reload'
+Or- for more robust (but equally simple) control of god from Capistrano- use San_Juan[http://github.com/jnewland/san_juan]
