@@ -24,7 +24,7 @@ God.load '/etc/god/*.god'
     # tells god to load all of the watches for this application
     file "/etc/god/#{configuration[:application]}.god",
         :require => file('/etc/god/god.conf'),
-        :content => "God.load '#{configuration[:deploy_to]}/config/god/*.god'",
+        :content => "God.load '#{configuration[:deploy_to]}/current/config/god/*.god'",
         :notify => exec('kickstart_god')
 
     # upstart- start god at boot, respawn when necessary
