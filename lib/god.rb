@@ -2,7 +2,7 @@ module God
 
   # A recipe to install and configure god. 
   # Put configuration files in config/god/*.god in your application.
-  def god
+  def god(options = {})
     gem 'god'
 
     # tells god where to find the main config file
@@ -15,11 +15,15 @@ module God
     # tells god to load all of the /etc/god/APPNAME.god
     file '/etc/god/god.conf',
          :require => file('/etc/god'),
+         :notify => exec('restart_god'),
          :content => """
-God.log_file = '/var/log/god.log'
-God.log_level = :error
+God.log_file = '#{options[:log_file] || '/var/log/god.log'}'
+God.log_level = :#{options[:log_level] || 'warn'}
 God.load '/etc/god/*.god'
 """
+
+    # kills god, the upstart/init service will resurrect
+    exec 'restart_god', :command => 'killall god || true', :refreshonly => true
 
     # tells god to load all of the watches for this application
     file "/etc/god/#{configuration[:application]}.god",

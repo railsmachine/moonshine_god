@@ -7,10 +7,21 @@ for god[http://god.rubyforge.com]. Just drop your god configs into
 @config/god@ in your Rails application, add a couple lines to your
 Moonshine manifest, and deploy.
 
+Available options:
+* <tt>log_level</tt> - One of debug, info, warn, error, or fatal. Default is 'warn'.
+* <tt>log_file</tt> - Path to log file. Default is /var/log/god.log.
+
 === Instructions
 
 * <tt>script/plugin install git://github.com/ACCOUNT/moonshine_god.git</tt>
 * Add god configuration files at config/god/*.god
+* Configure settings in the manifest if desired:
+    configure(
+      :god => {
+        :log_level => 'info',
+        :log_file => "configuration[:deploy_to]/shared/log/god.log"
+      }
+    )
 * Include the plugin and recipe(s) you want to use in your Moonshine manifest.
     plugin :god
     recipe :god
