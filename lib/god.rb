@@ -15,24 +15,22 @@ module God
     # tells god to load all of the /etc/god/APPNAME.god
     file '/etc/god/god.conf',
          :require => file('/etc/god'),
+         :backup => false,
          :notify => exec('restart_god'),
          :content => template("#{File.dirname(__FILE__)}/../templates/god.conf.erb", binding)
-
-    # kills god, the upstart/init service will resurrect
-    exec 'restart_god', :command => 'killall god || true', :refreshonly => true
 
     # tells god to load all of the watches for this application
     file "/etc/god/#{configuration[:application]}.god",
         :require => file('/etc/god/god.conf'),
         :content => "God.load '#{configuration[:deploy_to]}/current/config/god/*.god'",
-        :notify => exec('kickstart_god')
+        :notify => exec('restart_god')
 
     # upstart- start god at boot, respawn when necessary
     file '/etc/event.d/god',
         :content => File.read("#{File.dirname(__FILE__)}/../templates/god.upstart"),
-        :notify => exec('kickstart_god')
+        :notify => exec('restart_god')
 
-    exec 'kickstart_god',
+    exec 'restart_god',
         :command => 'stop god || true && start god',
         :require => file('/etc/event.d/god'),
         :refreshonly => true
