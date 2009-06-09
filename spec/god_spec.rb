@@ -31,7 +31,7 @@ describe God do
     end
 
     it "should use the provide log level" do
-      @manifest.files['/etc/god/god.conf'].content.should =~ /info/
+      @manifest.files['/etc/god/god.conf'].content.should =~ /:info/
     end
 
     it "should set the environment" do
