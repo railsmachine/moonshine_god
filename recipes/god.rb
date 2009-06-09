@@ -4,4 +4,4 @@ namespace :god do
     sudo 'god load /etc/god/god.conf'
   end
 end
-after :deploy, 'god:reload'
+after 'deploy:restart', 'god:reload'
