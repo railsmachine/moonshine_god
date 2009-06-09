@@ -16,11 +16,7 @@ module God
     file '/etc/god/god.conf',
          :require => file('/etc/god'),
          :notify => exec('restart_god'),
-         :content => """
-God.log_file = '#{options[:log_file] || '/var/log/god.log'}'
-God.log_level = :#{options[:log_level] || 'warn'}
-God.load '/etc/god/*.god'
-"""
+         :content => template("#{File.dirname(__FILE__)}/../templates/god.conf.erb", binding)
 
     # kills god, the upstart/init service will resurrect
     exec 'restart_god', :command => 'killall god || true', :refreshonly => true

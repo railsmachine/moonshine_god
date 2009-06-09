@@ -4,7 +4,7 @@
 
 Moonshine_God provides simple installation and configuration management
 for god[http://god.rubyforge.com]. Just drop your god configs into
-@config/god@ in your Rails application, add a couple lines to your
+<tt>config/god/*.god</tt> in your Rails application, add a couple lines to your
 Moonshine manifest, and deploy.
 
 Available options:
