@@ -13,11 +13,21 @@ describe God do
   describe "with no options" do
 
     before do
+      ENV['RAILS_ENV'] = nil
+      @manifest.configure(:deploy_to => '/srv/app')
       @manifest.god
     end
 
     it "should install god gem" do
       @manifest.packages.keys.should include('god')
+    end
+
+    it "should default to production" do
+      @manifest.files['/etc/god/god.conf'].content.should =~ /production/
+    end
+
+    it "should set the RAILS_ROOT" do
+      @manifest.files['/etc/god/god.conf'].content.should =~ /\/srv\/app\/current/
     end
 
   end
@@ -26,7 +36,6 @@ describe God do
 
     before do
       ENV['RAILS_ENV'] = 'staging'
-      ENV['RAILS_ROOT'] = '/srv/foo/current'
       @manifest.god(:log_level => 'info', :log_file => '/tmp/foo.log')
     end
 
@@ -36,10 +45,6 @@ describe God do
 
     it "should set the environment" do
       @manifest.files['/etc/god/god.conf'].content.should =~ /staging/
-    end
-
-    it "should set the RAILS_ROOT" do
-      @manifest.files['/etc/god/god.conf'].content.should =~ /\/srv\/foo\/current/
     end
 
   end
