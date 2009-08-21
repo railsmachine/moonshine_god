@@ -13,7 +13,7 @@ Available options:
 
 === Instructions
 
-* <tt>script/plugin install git://github.com/ACCOUNT/moonshine_god.git</tt>
+* <tt>script/plugin install git://github.com/railsmachine/moonshine_god.git</tt>
 * Add god configuration files at config/god/*.god
 * Configure settings in the manifest if desired:
     configure(
