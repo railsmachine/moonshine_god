@@ -19,7 +19,7 @@ Available options:
     configure(
       :god => {
         :log_level => 'info',
-        :log_file => "configuration[:deploy_to]/shared/log/god.log"
+        :log_file => "#{configuration[:deploy_to]}/shared/log/god.log"
       }
     )
 * Include the plugin and recipe(s) you want to use in your Moonshine manifest.
