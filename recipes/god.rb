@@ -1,7 +1,12 @@
 namespace :god do
-  desc "Restart god"
+  desc <<-DESC
+  Restart god to remove old watches. Would ideally be replaced with something
+  like 'god reload' - http://github.com/eric/god/commits/god-reload
+  DESC
   task :restart do
-    sudo 'god quit' # upstart will restart
+    sudo 'stop god'
+    sudo 'start god'
+    sleep 5
   end
 
   desc "Reload god configuration."
