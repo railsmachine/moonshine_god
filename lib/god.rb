@@ -26,13 +26,14 @@ module God
         :notify => exec('restart_god')
 
     # upstart- start god at boot, respawn when necessary
-    file '/etc/event.d/god',
+    path = Facter.lsbdistrelease.to_f < 10 ? "/etc/event.d/god" : "/etc/init/god.conf"
+    file "#{path}",
         :content => File.read("#{File.dirname(__FILE__)}/../templates/god.upstart"),
         :notify => exec('restart_god')
 
     exec 'restart_god',
         :command => 'stop god || true && start god',
-        :require => file('/etc/event.d/god'),
+        :require => file(path),
         :refreshonly => true
 
     logrotate '/var/log/god.log',
