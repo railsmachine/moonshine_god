@@ -1,7 +1,6 @@
 require File.join(File.dirname(__FILE__), 'spec_helper.rb')
 
 class GodManifest < Moonshine::Manifest::Rails
-  plugin :god
 end
 
 describe God do

@@ -23,5 +23,4 @@ Available options:
       }
     )
 * Include the plugin and recipe(s) you want to use in your Moonshine manifest.
-    plugin :god
     recipe :god
