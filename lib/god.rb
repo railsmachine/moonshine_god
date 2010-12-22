@@ -1,5 +1,18 @@
 module God
 
+  def self.included(manifest)
+    manifest.class_eval do
+      extend ClassMethods
+    end
+  end
+
+  module ClassMethods
+    def god_template_dir
+      @god_template_dir ||= Pathname.new(__FILE__).dirname.dirname.join('templates')
+    end
+  end
+   
+
   # A recipe to install and configure god. 
   # Put configuration files in config/god/*.god in your application.
   def god(options = {})
@@ -25,15 +38,25 @@ module God
         :content => "God.load '#{configuration[:deploy_to]}/current/config/god/*.god'",
         :notify => exec('restart_god')
 
-    # upstart- start god at boot, respawn when necessary
-    path = Facter.lsbdistrelease.to_f < 10 ? "/etc/event.d/god" : "/etc/init/god.conf"
-    file "#{path}",
-        :content => File.read("#{File.dirname(__FILE__)}/../templates/god.upstart"),
+    upstart_path = if Facter.lsbdistrelease.to_f < 10
+                     "/etc/event.d/god"
+                   else
+                     "/etc/init/god.conf"
+                   end
+
+    upstart_template = if Facter.lsbdistrelease.to_f < 10
+                        god_template_dir.join('god.upstart')
+                      else
+                        god_template_dir.join('god.upstart.lucid')
+                      end
+
+    file upstart_path,
+        :content => template(upstart_template, binding),
         :notify => exec('restart_god')
 
     exec 'restart_god',
         :command => 'stop god || true && start god',
-        :require => file(path),
+        :require => file(upstart_path),
         :refreshonly => true
 
     logrotate '/var/log/god.log',
