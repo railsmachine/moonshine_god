@@ -4,6 +4,7 @@ module Moonshine
     def self.included(manifest)
       manifest.class_eval do
         extend ClassMethods
+        configure :god => {:version => '0.11.0'}
       end
     end
 
@@ -16,7 +17,7 @@ module Moonshine
     # A recipe to install and configure god. 
     # Put configuration files in config/god/*.god in your application.
     def god(options = {})
-      gem 'god'
+      gem 'god', :version => (options[:version] || configuration[:god][:version])
 
       # tells god where to find the main config file
       file '/etc/default/god',

@@ -6,3 +6,8 @@ require File.join(File.dirname(__FILE__), '..', '..', 'moonshine', 'lib', 'moons
 require File.join(File.dirname(__FILE__), '..', 'lib', 'moonshine', 'god.rb')
 
 require 'shadow_puppet/test'
+require 'moonshine/matchers'
+
+Spec::Runner.configure do |config|
+  config.include Moonshine::Matchers
+end

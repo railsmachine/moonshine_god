@@ -18,8 +18,8 @@ describe Moonshine::God do
       @manifest.god
     end
 
-    it "should install god gem" do
-      @manifest.packages.keys.should include('god')
+    it "should install god 0.11.0" do
+      @manifest.should have_package('god').version('0.11.0')
     end
 
     it "should default to production" do
@@ -30,6 +30,20 @@ describe Moonshine::God do
       @manifest.files['/etc/god/god.conf'].content.should =~ /\/srv\/app\/current/
     end
 
+  end
+
+  it "allows older versions of god to be defined via options" do
+    @manifest.configure(:deploy_to => '/srv/app')
+    @manifest.god :version => '0.8.0'
+
+    @manifest.should have_package('god').version('0.8.0')
+  end
+
+  it "allows older versions of god to be defined via configure" do
+    @manifest.configure(:deploy_to => '/srv/app', :god => {:version => '0.8.0'})
+    @manifest.god
+
+    @manifest.should have_package('god').version('0.8.0')
   end
 
   describe "with options" do
