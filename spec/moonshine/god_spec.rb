@@ -1,9 +1,10 @@
-require File.join(File.dirname(__FILE__), 'spec_helper.rb')
+require File.join(File.dirname(__FILE__), '..', 'spec_helper.rb')
 
 class GodManifest < Moonshine::Manifest::Rails
+  include Moonshine::God
 end
 
-describe God do
+describe Moonshine::God do
 
   before do
     @manifest = GodManifest.new
