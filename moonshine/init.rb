@@ -1,3 +1,3 @@
-require "#{File.dirname(__FILE__)}/../lib/god.rb"
+require "#{File.dirname(__FILE__)}/../lib/moonshine/god.rb"
 
 include God
