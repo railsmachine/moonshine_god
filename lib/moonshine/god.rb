@@ -17,7 +17,9 @@ module Moonshine
     # A recipe to install and configure god. 
     # Put configuration files in config/god/*.god in your application.
     def god(options = {})
-      gem 'god', :version => (options[:version] || configuration[:god][:version])
+      god_version = options[:version] || configuration[:god][:version]
+      gem 'god', :version => god_version,
+                 :notify => exec('restart_god')
 
       # tells god where to find the main config file
       file '/etc/default/god',
