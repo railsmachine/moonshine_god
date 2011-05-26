@@ -4,7 +4,7 @@ namespace :god do
   like 'god reload' - http://github.com/eric/god/commits/god-reload
   DESC
   task :restart do
-    sudo 'stop god'
+    sudo 'stop god || true'
     sudo 'start god'
     sleep 5
   end
