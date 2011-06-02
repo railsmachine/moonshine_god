@@ -24,3 +24,6 @@ Available options:
     )
 * Include the plugin and recipe(s) you want to use in your Moonshine manifest.
     recipe :god
+* Add the :god role to server(s) in your capistrano deploy file(s) running god:
+    # config/deploy/staging.rb
+    server 'staging.example.com', :god, :app, :web, :db, :primary => true
