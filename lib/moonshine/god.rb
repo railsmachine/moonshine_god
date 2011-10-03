@@ -27,6 +27,7 @@ module Moonshine
            :content => "GOD_CONFIG=/etc/god/god.conf"
 
       file '/etc/god', :ensure => :directory
+      file "/etc/god/#{ENV['RAILS_ENV']}", :ensure => :directory
 
       # tells god to load all of the /etc/god/APPNAME.god
       file '/etc/god/god.conf',
