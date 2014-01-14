@@ -18,8 +18,8 @@ describe Moonshine::God do
       @manifest.god
     end
 
-    it "should install god 0.11.0" do
-      @manifest.should have_package('god').version('0.11.0')
+    it "should install god 0.13.3" do
+      @manifest.should have_package('god').version('0.13.3')
     end
 
     it "should default to production" do
