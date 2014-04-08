@@ -20,4 +20,4 @@ namespace :god do
   end
 
 end
-after 'deploy', 'god:restart'
+after 'deploy:restart', 'god:restart'
