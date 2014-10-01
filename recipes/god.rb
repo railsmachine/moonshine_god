@@ -21,3 +21,4 @@ namespace :god do
 
 end
 after 'deploy:restart', 'god:restart'
+after 'god:restart', 'god:status'
