@@ -14,7 +14,7 @@ module Moonshine
       end
     end
 
-    # A recipe to install and configure god. 
+    # A recipe to install and configure god.
     # Put configuration files in config/god/*.god in your application.
     def god(options = {})
       god_version = options[:version] || configuration[:god][:version]
@@ -42,13 +42,13 @@ module Moonshine
           :content => "God.load '#{configuration[:deploy_to]}/current/config/god/*.god'",
           :notify => exec('restart_god')
 
-      upstart_path = if Facter.lsbdistrelease.to_f < 10
+      upstart_path = if Facter.value(:lsbdistrelease).to_f < 10
                        "/etc/event.d/god"
                      else
                        "/etc/init/god.conf"
                      end
 
-      upstart_template = if Facter.lsbdistrelease.to_f < 10
+      upstart_template = if Facter.value(:lsbdistrelease).to_f < 10
                           god_template_dir.join('god.upstart')
                         else
                           god_template_dir.join('god.upstart.lucid')
@@ -67,6 +67,6 @@ module Moonshine
           :options => ['daily','rotate 7','compress','missingok','sharedscripts'],
           :postrotate => '/usr/bin/god quit > /dev/null' # will be restarted by upstart
     end
-    
+
   end
 end
