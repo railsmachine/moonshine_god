@@ -21,12 +21,6 @@ module Moonshine
       gem 'god', :version => god_version,
                  :notify => exec('restart_god')
 
-      # tells god where to find the main config file
-      file '/etc/default/god',
-           :require => file('/etc/god/god.conf'),
-           :content => "GOD_CONFIG=/etc/god/god.conf",
-           :notify => exec('restart_god')
-
       file '/etc/god',
            :require => package('god'),
            :ensure => :directory
@@ -35,6 +29,12 @@ module Moonshine
            :require => file('/etc/god'),
            :ensure => :directory
 
+      # tells god to load all of the watches for this application
+      file "/etc/god/#{configuration[:application]}.god",
+           :require => file('/etc/god'),
+           :content => "God.load '#{configuration[:deploy_to]}/current/config/god/*.god'",
+           :notify => exec('restart_god')
+
       # tells god to load all of the /etc/god/APPNAME.god
       file '/etc/god/god.conf',
            :require => file("/etc/god/#{configuration[:application]}.god"),
@@ -42,10 +42,10 @@ module Moonshine
            :content => template(god_template_dir.join('god.conf.erb'), binding),
            :notify => exec('restart_god')
 
-      # tells god to load all of the watches for this application
-      file "/etc/god/#{configuration[:application]}.god",
-           :require => file('/etc/god'),
-           :content => "God.load '#{configuration[:deploy_to]}/current/config/god/*.god'",
+      # tells god where to find the main config file
+      file '/etc/default/god',
+           :require => file('/etc/god/god.conf'),
+           :content => "GOD_CONFIG=/etc/god/god.conf",
            :notify => exec('restart_god')
 
       upstart_path = if Facter.value(:lsbdistrelease).to_f < 10
