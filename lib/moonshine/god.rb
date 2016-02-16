@@ -4,7 +4,7 @@ module Moonshine
     def self.included(manifest)
       manifest.class_eval do
         extend ClassMethods
-        configure :god => {:version => '0.13.3'}
+        configure :god => {:version => '0.13.7'}
       end
     end
 
@@ -14,7 +14,7 @@ module Moonshine
       end
     end
 
-    # A recipe to install and configure god. 
+    # A recipe to install and configure god.
     # Put configuration files in config/god/*.god in your application.
     def god(options = {})
       god_version = options[:version] || configuration[:god][:version]
@@ -67,6 +67,6 @@ module Moonshine
           :options => ['daily','rotate 7','compress','missingok','sharedscripts'],
           :postrotate => '/usr/bin/god quit > /dev/null' # will be restarted by upstart
     end
-    
+
   end
 end
