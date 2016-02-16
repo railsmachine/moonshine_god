@@ -4,7 +4,7 @@ module Moonshine
     def self.included(manifest)
       manifest.class_eval do
         extend ClassMethods
-        configure :god => {:version => '0.13.3'}
+        configure :god => {:version => '0.13.7'}
       end
     end
 
