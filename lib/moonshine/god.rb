@@ -64,8 +64,7 @@ module Moonshine
           :refreshonly => true
 
       logrotate '/var/log/god.log',
-          :options => ['daily','rotate 7','compress','missingok','sharedscripts'],
-          :postrotate => '/usr/bin/god quit > /dev/null' # will be restarted by upstart
+          :options => ['copytruncate', 'daily','rotate 7','compress','missingok','sharedscripts']
     end
 
   end
