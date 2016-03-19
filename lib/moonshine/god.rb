@@ -21,26 +21,32 @@ module Moonshine
       gem 'god', :version => god_version,
                  :notify => exec('restart_god')
 
-      # tells god where to find the main config file
-      file '/etc/default/god',
+      file '/etc/god',
            :require => package('god'),
-           :content => "GOD_CONFIG=/etc/god/god.conf"
+           :ensure => :directory
 
-      file '/etc/god', :ensure => :directory
-      file "/etc/god/#{ENV['RAILS_ENV']}", :ensure => :directory
-
-      # tells god to load all of the /etc/god/APPNAME.god
-      file '/etc/god/god.conf',
+      file "/etc/god/#{ENV['RAILS_ENV']}",
            :require => file('/etc/god'),
-           :backup => false,
-           :notify => exec('restart_god'),
-           :content => template(god_template_dir.join('god.conf.erb'), binding)
+           :ensure => :directory
 
       # tells god to load all of the watches for this application
       file "/etc/god/#{configuration[:application]}.god",
-          :require => file('/etc/god/god.conf'),
-          :content => "God.load '#{configuration[:deploy_to]}/current/config/god/*.god'",
-          :notify => exec('restart_god')
+           :require => file('/etc/god'),
+           :content => "God.load '#{configuration[:deploy_to]}/current/config/god/*.god'",
+           :notify => exec('restart_god')
+
+      # tells god to load all of the /etc/god/APPNAME.god
+      file '/etc/god/god.conf',
+           :require => file("/etc/god/#{configuration[:application]}.god"),
+           :backup => false,
+           :content => template(god_template_dir.join('god.conf.erb'), binding),
+           :notify => exec('restart_god')
+
+      # tells god where to find the main config file
+      file '/etc/default/god',
+           :require => file('/etc/god/god.conf'),
+           :content => "GOD_CONFIG=/etc/god/god.conf",
+           :notify => exec('restart_god')
 
       upstart_path = if Facter.value(:lsbdistrelease).to_f < 10
                        "/etc/event.d/god"
@@ -55,12 +61,12 @@ module Moonshine
                         end
 
       file upstart_path,
+          :require => file('/etc/default/god'),
           :content => template(upstart_template, binding),
           :notify => exec('restart_god')
 
       exec 'restart_god',
           :command => 'stop god || true && start god',
-          :require => file(upstart_path),
           :refreshonly => true
 
       logrotate '/var/log/god.log',
