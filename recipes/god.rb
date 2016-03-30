@@ -5,7 +5,7 @@ namespace :god do
   DESC
   task :restart, :roles => :god do
     sudo 'god terminate || true'
-    sudo 'god -c /etc/god/god.conf'
+    sudo 'start god || true'
     sleep 5
   end
 
